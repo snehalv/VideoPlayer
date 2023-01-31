@@ -1,0 +1,11 @@
+p {
+  font-family: Lato;
+}
+.play-effect{
+  cursor: pointer;
+  font-size:36px;
+  margin: 20px;
+}
+.play-effect:hover {
+  background-color: cornsilk;
+}

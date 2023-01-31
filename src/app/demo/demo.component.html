@@ -1,0 +1,76 @@
+<div class="container">
+	<ng-template #content let-c="close" let-d="dismiss">
+		<div class="modal-header">
+      	<h4 *ngIf="isCreate" class="modal-title">add user</h4>
+        <h4 *ngIf="!isCreate" class="modal-title">edit user</h4>
+			<button type="button" style="color: red" class="close" aria-label="Close"  (click)="d('Cross click')" >
+      <span aria-hidden="true">&times;</span>
+    </button>
+		</div>
+		<div class="modal-body">
+        <form  #addForm="ngForm" (submit)="isCreate?addUser(currentUser):updateUser(currentUser)"  novalidate>
+      		<div class="form-group" [ngClass]="{'is-invalid':id.invalid && id.touched,
+                                            'is-valid':id.valid && id.touched }">
+					<label for="inputEmail">Id</label>
+					<input type="number" class="form-control" name="id" [disabled]="!isCreate" placeholder="id" [(ngModel)]="currentUser.id" #id="ngModel"  required />
+					<div class="help-block error_message" *ngIf="id.invalid && id.touched">
+            id is required
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="inputEmail">Name</label>
+					<input type="text" class="form-control" name="name" placeholder="name" [(ngModel)]="currentUser.name"  #name ="ngModel" required />
+					<div class="help-block error_message" *ngIf="name.invalid && name.touched">name is invalid</div>
+				</div>
+				<div class="form-group">
+					<label for="inputPassword">Old</label>
+					<input type="number" class="form-control" name="old" placeholder="old" required [(ngModel)]="currentUser.old" #old="ngModel">
+					<div class="help-block error_message" *ngIf="old.invalid && old.touched">old is invalid</div>
+				</div>
+				<div class="form-group">
+					<label for="inputPassword">Teen</label>
+					<select name="teen" class="form-control" id="exampleFormControlSelect1" [(ngModel)]="currentUser.teen" #teen="ngModel" required>
+          <option value="">choose</option>
+          <option value="true">yes</option>
+          <option value="false">no</option>
+         </select>
+					<div class="help-block error_message" *ngIf="teen.invalid && teen.touched">teen is invalid</div>
+				</div>
+        
+				<button *ngIf="isCreate" type="submit" [disabled]="addForm.invalid" class="btn btn-primary"><i *ngIf="isLoad" class="fa fa-spinner fa-spin"></i>ADD</button>
+        				<button *ngIf="!isCreate" type="submit" [disabled]="addForm.invalid" class="btn btn-primary"><i *ngIf="isLoad" class="fa fa-spinner fa-spin"></i>Edit</button>
+
+			</form>
+		</div>
+		<div class="modal-footer">
+
+		</div>
+	</ng-template>
+
+	<button class="btn btn-small btn-success adduser" (click)="open(content)">Add user</button>
+    <ngx-datatable
+        class="material"
+        [rows]="rows"
+        [columns]="[{name:'id'},{name:'name'},{name:'old'},{name:'teen'}]"
+        [columnMode]="'force'"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [rowHeight]="'auto'"
+        [limit]="10">
+      </ngx-datatable>
+	<div class="list">
+		<div *ngIf="errorMessage"> {{errorMessage}} </div>
+		<h3>list user</h3>
+		<ul class="list" *ngFor="let user of usersObs | async ">
+			<li class="item">
+				<div class="user">
+					<p>{{user.id}}</p>
+					<p>{{user.name}}</p>
+					<p>{{user.old}}</p>
+					<p>{{user.teen}}</p>
+					<p class="action"><button (click)="editUser(content,user)" class="btn-small btn-info">Edit</button><button class="btn-small btn-danger"  (click)="deleteUser(user.id)" >Delete</button></p>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>
